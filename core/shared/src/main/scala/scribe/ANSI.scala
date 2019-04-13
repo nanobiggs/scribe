@@ -84,14 +84,14 @@ object ANSI {
   }
 }
 
-case class ANSI(ansi: String, `type`: String, default: String) {
+case class ANSI(ansi: String, typ: String, default: String) {
   def apply(value: => String): String = {
     val map = ANSI.threadLocal.get()
-    val previous = map.get(`type`)
-    ANSI.threadLocal.set(map + (`type` -> this))
+    val previous = map.get(typ)
+    ANSI.threadLocal.set(map + (typ -> this))
     val reset = previous.map(_.ansi).getOrElse(default)
     val end = if (reset == AnsiColor.RESET) {
-      p"$reset${map.filterNot(_._1 == `type`).map(_._2.ansi).mkString}"
+      p"$reset${map.filterNot(_._1 == typ).map(_._2.ansi).mkString}"
     } else {
       reset
     }
